@@ -16,7 +16,11 @@ function eklenti_icerigim(){
     ?>
     <form method="post"><br/>
         <label>Isim: </label>
-        <input type="text" name="isim"></input>
+        <input type="text" name="isim"></input> <br/>
+        <label>eMail: </label>
+        <input type="text" name="email"></input> <br/>
+        <label>Tel: </label>
+        <input type="text" name="tel"></input> <br/>
         <input type="submit"></input>
     </from>
     <?php
@@ -35,8 +39,17 @@ function eklenti_icerigim(){
     //     $eski_veri = get_post_meta(2,"isim")[0];
     //     update_post_meta(2,"isim",$ad,true);
     // }
-
+    if($_POST){
+        if($_POST["isim"] != ""){
+            global $wpdb;
+            $wpdb->insert("wp_bilgiler7", array(
+                "isim"=>$_POST["isim"],
+                "eposta"=>$_POST["email"],
+                "telefon"=>$_POST["tel"]
+            ));
+        }
     
+    }
 }
 
 
@@ -66,7 +79,30 @@ function veritabani_tablosu_olustur(){
 
 veritabani_tablosu_olustur();
 
+add_action("admin_menu","kutucuk_ekle");
 
+function kutucuk_ekle(){
+    add_meta_box("benim kutum","bilgiler","kutucuk_goster","post","side","high",null);
+}
+function kutucuk_goster(){
+    ?>
+          <form method="post"><br/>
+    
+        <input type="text" name="isim" placeholder="isim giriniz"></input>
+       
+    </from>
+    <?php
+}
 
+add_action("save_post","kutucuk_kaydet");
+
+function kutucuk_kaydet(){
+    global $wpdb;
+            $wpdb->insert("wp_bilgiler7", array(
+                "isim"=>$_POST["isim"],
+                "eposta"=>"",
+                "telefon"=>""
+            ));
+}
 
 ?>
