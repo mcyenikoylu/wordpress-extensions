@@ -30,11 +30,43 @@ function eklenti_icerigim(){
     // }
 
 
-    if($_POST){
-        $ad = $_POST["isim"];
-        $eski_veri = get_post_meta(2,"isim")[0];
-        update_post_meta(2,"isim",$ad,true);
-    }
+    // if($_POST){
+    //     $ad = $_POST["isim"];
+    //     $eski_veri = get_post_meta(2,"isim")[0];
+    //     update_post_meta(2,"isim",$ad,true);
+    // }
 
+    
 }
+
+
+function veritabani_tablosu_olustur(){
+
+    global $wpdb;
+    
+    $charset = $wpdb->get_charset_collate();
+    $tablo_adi = $wpdb->prefix."bilgiler7";
+    
+    $sql = "CREATE TABLE $tablo_adi (
+        id INT NOT NULL AUTO_INCREMENT ,
+        isim VARCHAR(50) NOT NULL,
+        eposta VARCHAR(50) NOT NULL,
+        telefon VARCHAR(50) NOT NULL,
+        UNIQUE KEY id (id)
+    ) $charset;
+    ";
+    
+    require_once(ABSPATH. "wp-admin/includes/upgrade.php");
+    
+    dbDelta($sql);
+    
+    register_activation_hook(__FILE__, 'creating_plugin_table');//eklentiyi etkinlestirigimiz anda tablo olusturur.
+    
+}
+
+veritabani_tablosu_olustur();
+
+
+
+
 ?>
